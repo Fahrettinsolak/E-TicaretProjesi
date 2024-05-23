@@ -1,0 +1,221 @@
+﻿@using IvaETicaret.Models
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+<!DOCTYPE html>
+<html lang="en">
+
+<head >
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="@Url.Content("~/images/image/logoc.ico")">
+    <title>İVA - @ViewData["Title"]</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/IvaETicaret.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.2/css/jquery.dataTables.css">
+
+
+</head>
+
+<body style="background-color:yellow">
+
+    <header >
+
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-dark border-bottom border-bottom-dark box-shadow mb-3" data-bs-theme="dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index" style="color:#7b7b7b"><img src="~/images/image/Analogo.jpg" width="250" height="60" /></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Ana Sayfa</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="iletisim">İletişim</a>
+                        </li> 
+                        <li class="nav-item">
+
+                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Hakkimizda">Hakkımızda</a>
+                        </li>
+                        <li class="nav-item">
+
+                            <form class="form-inline" action="/Customer/Home/Search" method="post" style="margin-right:0.5rem">
+                                <input name="q" type="text" class="form-control mr-2" placeholder="Arama" />
+                            </form>
+                        </li>
+
+
+                    </ul>
+
+                 
+                  @*  <div class="row">
+                        <div class="col-md-12">
+                            
+                        </div>
+                    </div>*@
+                    @if (User.IsInRole(Diger.Role_Admin) || User.IsInRole(Diger.Role_Bayi) || User.IsInRole(Diger.Role_Birey) || User.IsInRole(Diger.Role_User))
+                    {
+                        <div class="dropdown">
+
+                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Yönetim Paneli
+                            </button>
+                            <ul class="dropdown-menu">
+                                @if (User.IsInRole(Diger.Role_Admin))
+                                {
+                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">Kategoriler</a></li>
+                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="Department" asp-action="Index">Bölümler</a></li>
+                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="Product" asp-action="Index">Ürünler</a></li>
+                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="OdemeTur" asp-action="Index">Odeme Tur</a></li>
+                                    <li>
+                                        <a class="dropdown-item">Şehir,İlçe,Mahalle </a>
+                                        <ul class="dropdown-menu dropdown-submenu">
+                                            <li><a class="dropdown-item" asp-area="Customer" asp-controller="City" asp-action="Index">İl</a></li>
+                                            <li><a class="dropdown-item" asp-area="Customer" asp-controller="County" asp-action="Index">İlçe</a></li>
+                                            <li><a class="dropdown-item" asp-area="Customer" asp-controller="District" asp-action="Index">Mahalle</a></li>
+                                        </ul>
+
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item">Raporlar </a>
+                                        <ul class="dropdown-menu dropdown-submenu">
+                                            <li>
+                                                <a class="dropdown-item" asp-area="Admin" asp-controller="Report" asp-action="DayReport">Günlük Satış Raporu</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" asp-area="Admin" asp-controller="Report" asp-action="Monthly">Aylık Satış Raporu</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" asp-area="Admin" asp-controller="Report" asp-action="Year">Yıllık Satış Raporu</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" asp-area="Admin" asp-controller="Report" asp-action="Index">Filtreli Satış Raporu</a>
+                                            </li>
+                                        </ul>
+
+                                    </li>
+
+                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="Order" asp-action="Index">Siparişler</a></li>
+                                    <li>
+                                        <a class="dropdown-item">Mağaza İşlemleri </a>
+                                        <ul class="dropdown-menu dropdown-submenu">
+                                            <li>
+                                                <a class="dropdown-item" asp-area="Customer" asp-controller="Store" asp-action="Index">Mağzalar</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" asp-area="Admin" asp-controller="StorePayment" asp-action="Index">Mağaza Ödemeleri</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item">Kullanıcı İşlemleri </a>
+                                        <ul class="dropdown-menu dropdown-submenu">
+                                            <li><a class="dropdown-item" asp-area="Customer" asp-controller="Adress" asp-action="Index">Kullanıcı Adresleri</a></li>
+                                            <li><a class="dropdown-item" asp-area="Admin" asp-controller="User" asp-action="Index">Kullanıcılar</a></li>
+                                        </ul>
+                                    </li>
+
+
+                                }
+                                @if (User.IsInRole(Diger.Role_Bayi))
+                                {
+                                    <li> <a asp-area="Admin" asp-controller="Product" asp-action="Index" class="dropdown-item" style="margin-right:0.5rem"><i style="margin-right:0.5rem " class="bi bi-box2"></i>Ürünler</a></li>
+                                    <li> <a asp-area="Admin" asp-controller="Category" asp-action="Index" class="dropdown-item" style="margin-right:0.5rem"><i style="margin-right:0.5rem " class="bi bi-diagram-3"></i>Kategoriler</a></li>
+                                    <li>
+                                        <a class="dropdown-item"> <i style="margin-right:0.5rem " class="bi bi-shop"></i> Mağaza İşlemleri</a>
+                                        <ul class="dropdown-menu dropdown-submenu">
+                                            <li> <a asp-area="Customer" asp-controller="Store" asp-action="Edit" class="dropdown-item" style="margin-right:0.5rem"><i style="margin-right:0.5rem " class="bi bi-shop"></i>Mağazam</a></li>
+                                            <li> <a asp-area="Customer" asp-controller="StoreAdress" asp-action="Index" class="dropdown-item" style="margin-right:0.5rem"><i style="margin-right:0.5rem " class="bi bi-geo-alt"></i>Mağaza Adreslerim</a></li>
+                                            <li><a class="dropdown-item" asp-area="Admin" asp-controller="StorePayment" asp-action="Index">Mağaza Ödemeleri</a></li>
+                                        </ul>
+
+                                    </li>
+
+                                    <li>  <a asp-area="Admin" asp-controller="Order" asp-action="Index" class="dropdown-item" style="margin-right:0.5rem"><i style="margin-right:0.5rem " class="bi bi-border-width"></i>Siparişler</a></li>
+                                    <li>
+                                        <a class="dropdown-item">Raporlar </a>
+                                        <ul class="dropdown-menu dropdown-submenu">
+                                            <li>
+                                                <a class="dropdown-item" asp-area="Customer" asp-controller="BayiReport" asp-action="DayReport">Günlük Satış Raporu</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" asp-area="Customer" asp-controller="BayiReport" asp-action="Monthly">Aylık Satış Raporu</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" asp-area="Customer" asp-controller="BayiReport" asp-action="Year">Yıllık Satış Raporu</a>
+                                                <a class="dropdown-item" asp-area="Customer" asp-controller="BayiReport" asp-action="Index">Yıllık Satış Raporu</a>
+                                            </li>
+                                        </ul>
+
+                                    </li>
+
+                                }
+                                @if (User.IsInRole(Diger.Role_User) || User.IsInRole(Diger.Role_Birey))
+                                {
+                                    <li> <a asp-area="Customer" asp-controller="Adress" asp-action="Index" class="dropdown-item" style="margin-right:0.5rem"><i style="margin-right:0.5rem " class="bi bi-box2"></i>Adreslerim</a></li>
+                                    <li>  <a asp-area="Admin" asp-controller="Order" asp-action="Index" class="dropdown-item" style="margin-right:0.5rem"><i style="margin-right:0.5rem " class="bi bi-border-width"></i>Siparişler</a></li>
+                                }
+
+                            </ul>
+
+                        </div>
+                    }
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container" style="background-color:yellow">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    <br />
+    <br />
+    <br />
+    <br />
+
+    <footer class="border-top footer text-muted">
+        <div class="container" style="background-color:yellow">
+            <div class="row">
+               <div class="col">
+                   
+                </div>  
+                <div class="col">
+                    <img src="~/images/image/logo_band_colored@2x.png" height="25px" />
+                </div>
+                <div class="col">
+                   
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    ©2023-İva <a class="btn btn-link"  style="font-size:10px"  asp-area="" asp-controller="Home" asp-action="Privacy">Gizlilik Politikası</a><a class="btn btn-link" style="font-size:10px" asp-area="" asp-controller="Home" asp-action="DistanceSellingContract">Mesafeli Satış Sözleşmesi</a> 
+                    <a class="btn btn-link" style="font-size:10px" asp-area="" asp-controller="Home" asp-action="CancellationRefund">İade Koşulları</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.js"></script>
+    @*    <script src="~/lib/jquery/dist/jquery.min.js"></script>*@
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+@*  bu script geri gitmeyi engelliyor  <script type="text/javascript" language="”JavaScript”">
+        window.history.forward(1);
+    </script>*@
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+
+</html>
+

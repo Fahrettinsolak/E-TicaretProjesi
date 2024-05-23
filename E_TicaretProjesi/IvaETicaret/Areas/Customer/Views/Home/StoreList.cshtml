@@ -1,0 +1,43 @@
+﻿@model List<StoreAdress>
+@{
+    ViewData["Title"] = "Mağazalar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-3" style="margin-bottom:6px">
+                <div class="card">
+                    <div class="card-header" style="font-size:large">
+                        <a class="navbar-brand" style="color:#212529">@item.Store.CompanyName</a>
+                    </div>
+                    @if (item.Store.Image != null)
+                    {
+                        <img src="@item.Store.Image" class="card-img-top" alt="" style="height:200px" />
+                    }
+                    else
+                    {
+                        <img src="~/images/image/resim-yok-png-2-300x300.png" class="card-img-top" alt="" style="height:200px" />
+                    }
+              
+
+                    @if (item.Store.StoreIsActive)
+                    {
+                         <div class="card-body">
+                        <a asp-action="Category" asp-controller="Home" asp-route-id="@item.StoreId" class="btn btn-info">İncele</a>
+                    </div>
+                    }
+                    else
+                    {
+                        <a  class="btn btn-danger">Mağaza Kapalı</a>
+                    }
+                   
+                </div>
+            </div>
+
+        }
+    </div>
+</div>
+

@@ -1,0 +1,47 @@
+﻿@model IEnumerable<IvaETicaret.Models.Department>
+@{
+    ViewData["Title"] = "Home Page";
+}
+<div class="container">
+    <div class="row">
+        @if (!User.IsInRole(Diger.Role_Bayi))
+        {
+            @foreach (var item in Model)
+            {
+                <div class="col-md-3" style="margin-bottom:6px">
+                    <div class="card">
+                        <div class="card-header" style="font-size:large">
+                            <a asp-action="Location" asp-controller="Home" asp-route-id="@item.Id" class="navbar-brand" style="color:#212529">@item.Name</a>
+                        </div>
+                        <a asp-action="Location" asp-controller="Home" asp-route-id="@item.Id">
+                            @if (item.Image == null)
+                            {
+                                <img src="~/images/image/resim-yok-png-2-300x300.png" class="card-img-top" alt="" style="height:150px" />
+                            }
+                            else
+                            {
+                                <img src="@item.Image" class="card-img-top" alt="" style="height:150px" />
+                            }
+
+                        </a>
+
+                       @* <div class="card-body">
+                            <a asp-action="Location" asp-controller="Home" asp-route-id="@item.Id" class="btn btn-info">İncele</a>
+                        </div>*@
+                    </div>
+                </div>
+
+            }
+            <div class="col-md-3">
+                <a class="rounded-circle btn btn-dark" asp-controller="Home" asp-action="Iletisim">
+                    <img src="~/images/image/logoiva.jpg" style="max-width:150px;max-height:150px" class="rounded-circle"/>
+                  <p>
+                        <span class="rounded-circle"> İva Çağır</span>
+                  </p>  
+                </a>
+                
+               
+            </div>
+        }
+    </div>
+</div>

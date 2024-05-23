@@ -1,0 +1,162 @@
+﻿@model IEnumerable<IvaETicaret.Models.OrderHeader>
+@{
+    ViewData["Title"] = "Beklenen";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@if (Model.Count() > 0)
+{
+    @if (User.IsInRole(Diger.Role_Bayi))
+    {
+
+        <audio id="myAudio" autoplay loop>
+            <source src="~/images/zilsesi.mp3" type="audio/mp3" />
+            Your browser does not support the audio element.
+        </audio>
+
+
+    }
+
+}
+@*<audio id="myAudio">
+    <source src="~/images/Slate.mp3" type="audio/mp3" />
+    Your browser does not support the audio element.
+</audio>*@
+<div class="btn-group d-grid gap-2 d-md-flex justify-content-md-end" role="group" aria-label="Basic mixed styles example">
+    <a asp-action="Iptal" asp-area="Admin" asp-controller="Order" type="button" class="btn btn-danger">İptal Siparişler</a>
+    <a asp-action="Beklenen" asp-area="Admin" asp-controller="Order" type="button" class="btn btn-danger active">Beklenen Siparişler</a>
+    <a asp-action="Hazirlanan" asp-area="Admin" asp-controller="Order" type="button" class="btn btn-warning">Hazırlanmakta Olan Siparişler</a>
+    <a asp-action="YolaCikan" asp-area="Admin" asp-controller="Order" type="button" class="btn btn-info">Yola Çıkan Siparişler</a>
+    <a asp-action="TeslimEdildi" asp-area="Admin" asp-controller="Order" type="button" class="btn btn-success">Teslim Edilen Siparişler</a>
+    <a asp-action="Index" asp-area="Admin" asp-controller="Order" type="button" class="btn btn-primary">Tüm Siparişler</a>
+</div>
+<br />
+
+
+<div class="container">
+    <div class="row">
+            <div class="col-9">
+        <br />
+        <table class="table table-dark table-bordered table-striped" id="myTable">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>
+                        Adı
+                    </th>
+                    <th>
+                        Soyadı
+                    </th>
+                    <th>
+                        Telefon
+                    </th>
+                    <th>
+                        Sipariş Durumu
+                    </th>
+                    <th>
+                        Ödeme Durumu
+                    </th>
+                    <th>
+                        Ödeme Türü
+                    </th>
+                    <th>
+                        Toplam Tutar
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <br />
+                            @if (User.IsInRole(Diger.Role_Admin) || User.IsInRole(Diger.Role_Bayi))
+                            {
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-success" style="margin-right:0.5rem"><i style="margin-right:0.5rem " class="bi bi-pencil-square"></i>Düzenle</a>
+                            }
+                            else
+                            {
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-success" style="margin-right:0.5rem"><i style="margin-right:0.5rem " class="bi bi-pencil-square"></i>Detay</a>
+                            }
+
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SurName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ApplicationUser.PhoneNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.OrderStatus)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Odendimi)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.OdemeTur.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.OrderTotal)
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-3">
+        <div class="col-md-3">
+            <a class="rounded-circle btn btn-dark" asp-area="Customer" asp-controller="Home" asp-action="Iletisim">
+                <img src="~/images/image/logoiva.jpg" style="max-width:150px;max-height:150px" class="rounded-circle" />
+                <p>
+                    <span class="rounded-circle"> İva Çağır</span>
+                </p>
+            </a>
+        </div>
+    </div>
+    </div>
+</div>
+@section Scripts{
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#myTable").DataTable({
+                responsive: true,
+                "aLengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
+                iDisplayLength: 10,
+                "oLanguage": {
+                    "sZeroRecords": "Arama kriterinizle eşleşen kayıt yok.",
+                    "sLengthMenu": "Sayfa başına _MENU_ kayıt göster",
+                    "sInfo": "_TOTAL_ kaydın _START_ ile _END_ arası gösteriliyor ",
+                    "sInfoEmpty": "0 kaydın 0 ile 0 arası gösteriliyor",
+                    "sInfoFiltered": "(toplam _MAX_ kayıttan filtrelendi)",
+                    "sSearch": "Ara:",
+                    "oPaginate": {
+                        "sPrevious": "Önceki",
+                        "sNext": "Sonraki",
+                        "sFirst": "İlk",
+                        "sLast": "Son"
+                    },
+                    "sProcessing": "Yükleniyor..."
+                },
+            });
+        });
+
+    </script>
+    <script type="text/javascript">
+
+        setTimeout(function () {
+            window.location.reload(1);
+        }, 60000);
+                //setTimeout( $(document).ready(function play() {
+                //    document.getElementById('myAudio').play();
+                //}
+                //), 60000);
+    </script>
+}
